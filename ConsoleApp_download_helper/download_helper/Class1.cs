@@ -2,7 +2,14 @@
 
 namespace download_helper
 {
-    public class Class1
+    public class DownloadHelper
     {
+        public string ConfigFilePath;
+        public string DownloadDirectory;
+
+        public void GetAllFiles()
+        {
+
+        }
     }
 }

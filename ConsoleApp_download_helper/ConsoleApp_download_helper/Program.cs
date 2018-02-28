@@ -1,4 +1,5 @@
 ﻿using System;
+using download_helper;
 
 namespace ConsoleApp_download_helper
 {
@@ -6,7 +7,13 @@ namespace ConsoleApp_download_helper
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            DownloadHelper dh = new DownloadHelper();
+            dh.ConfigFilePath = @"C:\temp\download_helper_config_file.txt";
+            dh.DownloadDirectory = @"C:\temp\";
+            dh.GetAllFiles();
+
+            Console.WriteLine("Done");
+            Console.ReadLine();
         }
     }
 }
