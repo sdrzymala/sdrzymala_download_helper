@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.ComponentModel;
 
 namespace download_helper
 {
@@ -27,10 +28,19 @@ namespace download_helper
                 var currentFileSize = CheckSingleFileSizeInMB(file);
                 bool fileAlreadyExists = File.Exists(currentFileOutputPath);
 
-                if (fileAlreadyExists == false || (fileAlreadyExists == true && OverwriteExistingFile == true))
+                if (fileAlreadyExists == false)
                 {
                     client.DownloadFile(file, currentFileOutputPath);
-                    outputLog.AppendLine(DateTime.Now.ToString("yyyyMMddHHmmss") + " | " + file + " | " + currentFileSize);
+                    outputLog.AppendLine(DateTime.Now.ToString("yyyyMMddHHmmss") + " | " + file + " | " + currentFileSize + " | " + InfoType.FileDownloaded.ToString());
+                }
+                else if (fileAlreadyExists == true && OverwriteExistingFile == true)
+                {
+                    client.DownloadFile(file, currentFileOutputPath);
+                    outputLog.AppendLine(DateTime.Now.ToString("yyyyMMddHHmmss") + " | " + file + " | " + currentFileSize + " | " + InfoType.FileOverwriten.ToString());
+                }
+                else
+                {
+                    outputLog.AppendLine(DateTime.Now.ToString("yyyyMMddHHmmss") + " | " + file + " | " + currentFileSize + " | " + InfoType.FileAlreadyExists.ToString());
                 }
             }
 
@@ -45,7 +55,7 @@ namespace download_helper
             foreach (var file in allFilesToDownload)
             {
                 var currentFileSize = CheckSingleFileSizeInMB(file);
-                outputLog.AppendLine(DateTime.Now.ToString("yyyyMMddHHmmss") + " | " + file + " | " + currentFileSize);
+                outputLog.AppendLine(DateTime.Now.ToString("yyyyMMddHHmmss") + " | " + file + " | " + currentFileSize + " | " + InfoType.FileSizeChecked.ToString());
             }
 
             SaveLog(outputLog, MethodBase.GetCurrentMethod().Name);
