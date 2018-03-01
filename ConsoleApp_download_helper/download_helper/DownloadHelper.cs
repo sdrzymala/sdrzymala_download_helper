@@ -21,9 +21,17 @@ namespace download_helper
 
             foreach (var file in allFilesToDownload)
             {
+                string currentFileName = Path.GetFileName(file);
+                string currentFileOutputPath = Path.Combine(DownloadDirectory, currentFileName);
+                WebClient client = new WebClient();
                 var currentFileSize = CheckSingleFileSizeInMB(file);
-                DownloadSingleFile(file);
-                outputLog.AppendLine(DateTime.Now.ToString("yyyyMMddHHmmss") + " | " + file + " | " + currentFileSize);
+                bool fileAlreadyExists = File.Exists(currentFileOutputPath);
+
+                if (fileAlreadyExists == false || (fileAlreadyExists == true && OverwriteExistingFile == true))
+                {
+                    client.DownloadFile(file, currentFileOutputPath);
+                    outputLog.AppendLine(DateTime.Now.ToString("yyyyMMddHHmmss") + " | " + file + " | " + currentFileSize);
+                }
             }
 
             SaveLog(outputLog, MethodBase.GetCurrentMethod().Name);
@@ -48,27 +56,13 @@ namespace download_helper
             return new List<string>(File.ReadAllLines(ConfigFilePath));; 
         }
 
-        private void DownloadSingleFile(string FileUrl)
-        {
-            string currentFileName = Path.GetFileName(FileUrl);
-            string currentFileOutputPath = Path.Combine(DownloadDirectory, currentFileName);
-            WebClient client = new WebClient();
 
-            bool fileAlreadyExists = File.Exists(currentFileOutputPath);
-
-            if (fileAlreadyExists == false || (fileAlreadyExists == true && OverwriteExistingFile == true))
-            {
-                var fileSize = CheckSingleFileSizeInMB(FileUrl);
-                client.DownloadFile(FileUrl, currentFileOutputPath);
-            }
-        }
-
-        private double CheckSingleFileSizeInMB(string FileUrl)
+        private string CheckSingleFileSizeInMB(string FileUrl)
         {
             WebClient client = new WebClient();
             client.OpenRead(FileUrl);
             Int64 bytes_total = Convert.ToInt64(client.ResponseHeaders["Content-Length"]);
-            return Math.Round(((bytes_total / 1024f) / 1024f),2);
+            return Convert.ToString(Math.Round(((bytes_total / 1024f) / 1024f),2)) + " MB";
         }
 
         private void SaveLog(StringBuilder outputLog, string methodName)
