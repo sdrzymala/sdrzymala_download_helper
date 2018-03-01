@@ -11,7 +11,8 @@ namespace ConsoleApp_download_helper
             dh.ConfigFilePath = @"C:\temp\download_helper_config_file.txt";
             dh.DownloadDirectory = @"C:\temp\";
             dh.OverwriteExistingFile = true;
-            dh.GetAllFiles();
+            dh.CheckSizeOfAllFiles();
+            dh.DownloadAllFiles();
 
             Console.WriteLine("Done");
             Console.ReadLine();
