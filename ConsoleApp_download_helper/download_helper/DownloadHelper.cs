@@ -9,6 +9,7 @@ namespace download_helper
     {
         public string ConfigFilePath;
         public string DownloadDirectory;
+        public bool OverwriteExistingFile = true;
 
         public void GetAllFiles()
         {
@@ -32,7 +33,12 @@ namespace download_helper
             string currentFileName = Path.GetFileName(FileUrl);
             string currentFileOutputPath = Path.Combine(DownloadDirectory, currentFileName);
 
-            Client.DownloadFile(FileUrl, currentFileOutputPath);
+            bool fileAlreadyExists = File.Exists(currentFileOutputPath);
+
+            if (fileAlreadyExists == false || (fileAlreadyExists == true && OverwriteExistingFile == true))
+            {
+                Client.DownloadFile(FileUrl, currentFileOutputPath);
+            }
         }
     }
 }
