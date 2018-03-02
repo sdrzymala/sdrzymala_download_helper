@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sdrzymala_download_helper", "sdrzymala_download_helper\sdrzymala_download_helper.csproj", "{B4E524AC-2EF4-45F8-9BFD-95A14361D349}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp_test_download_helper", "ConsoleApp_test_download_helper\ConsoleApp_test_download_helper.csproj", "{740AD783-4135-41E3-AA4B-E42EC30DEDDF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B4E524AC-2EF4-45F8-9BFD-95A14361D349}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4E524AC-2EF4-45F8-9BFD-95A14361D349}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4E524AC-2EF4-45F8-9BFD-95A14361D349}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4E524AC-2EF4-45F8-9BFD-95A14361D349}.Release|Any CPU.Build.0 = Release|Any CPU
+		{740AD783-4135-41E3-AA4B-E42EC30DEDDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{740AD783-4135-41E3-AA4B-E42EC30DEDDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{740AD783-4135-41E3-AA4B-E42EC30DEDDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{740AD783-4135-41E3-AA4B-E42EC30DEDDF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {289328EA-0DA6-4504-B631-035572929825}
+	EndGlobalSection
+EndGlobal
