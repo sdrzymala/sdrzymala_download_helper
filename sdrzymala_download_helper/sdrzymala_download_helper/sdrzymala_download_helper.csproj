@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="DownloadHelper.cs" />
     <Compile Include="InfoType.cs" />
+    <Compile Include="OperationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

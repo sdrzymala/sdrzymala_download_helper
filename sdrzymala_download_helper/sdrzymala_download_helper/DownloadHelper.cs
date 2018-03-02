@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Text;
 using System.ComponentModel;
 using NLog;
+using System.Linq;
+using sdrzymala_download_helper;
 
 namespace download_helper
 {
@@ -15,7 +17,9 @@ namespace download_helper
         public string DownloadDirectory;
         public bool OverwriteExistingFile = true;
         public bool ClearOutputLogFile = false;
-        private string ouputLogFileName = "download_helper_log";
+        public int CheckFileLimit = 100;
+        public int DownloadFileLimit = 100;
+        public bool ExcludeExistingFiles = true;
 
         Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -25,7 +29,7 @@ namespace download_helper
 
         public void DownloadAllFiles()
         {
-            List<string> allFilesToDownload = GetAllFilesToDownloadFromConfigFile();
+            List<string> allFilesToDownload = GetAllFilesToDownloadFromConfigFile(OperationType.DownloadFile);
 
             foreach (var file in allFilesToDownload)
             {
@@ -58,7 +62,7 @@ namespace download_helper
         public void CheckSizeOfAllFiles()
         {
 
-            List<string> allFilesToDownload = GetAllFilesToDownloadFromConfigFile();
+            List<string> allFilesToDownload = GetAllFilesToDownloadFromConfigFile(OperationType.CheckFileSize);
 
             foreach (var file in allFilesToDownload)
             {
@@ -70,11 +74,61 @@ namespace download_helper
             }
         }
 
-        private List<string> GetAllFilesToDownloadFromConfigFile()
+        private List<string> GetAllFilesToDownloadFromConfigFile(OperationType operationType)
         {
-            return new List<string>(File.ReadAllLines(ConfigFilePath)); ;
+
+            List<string> allFiles = new List<string>(File.ReadAllLines(ConfigFilePath));
+            List<string> outputFiles = new List<string>();
+
+            int currentLimit = 0;
+
+            if (operationType == OperationType.CheckFileSize)
+            {
+                currentLimit = CheckFileLimit;
+            }
+            else if (operationType == OperationType.DownloadFile)
+            {
+                currentLimit = DownloadFileLimit;
+            }
+
+            if (ExcludeExistingFiles == true)
+            {
+                int currentFileNumber = 1;
+                
+
+                    foreach (var file in allFiles)
+                    {
+                        string currentFileName = Path.GetFileName(file);
+                        string currentFileOutputPath = Path.Combine(DownloadDirectory, currentFileName);
+                        bool fileAlreadyExists = File.Exists(currentFileOutputPath);
+
+                        if (fileAlreadyExists == false)
+                        {
+                            outputFiles.Add(file);
+
+                            if (currentLimit == currentFileNumber)
+                            {
+                                return outputFiles;
+                            }
+                            
+                            currentFileNumber++;
+                        }
+                    }
+
+                
+            }
+            else
+            {
+                outputFiles = allFiles.Take(currentLimit).ToList();
+            }
+
+            return outputFiles;
         }
 
+        private List<string> GetAllFilesToCheckFromConfigFile()
+        {
+            return new List<string>(File.ReadAllLines(ConfigFilePath)).Take(CheckFileLimit).ToList();
+        }
 
         private string CheckSingleFileSizeInMB(string FileUrl)
         {
