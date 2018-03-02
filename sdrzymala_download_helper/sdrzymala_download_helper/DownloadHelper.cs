@@ -35,25 +35,29 @@ namespace download_helper
             {
                 string currentFileName = Path.GetFileName(file);
                 string currentFileOutputPath = Path.Combine(DownloadDirectory, currentFileName);
-                WebClient client = new WebClient();
+                MyWebClient client = new MyWebClient();
                 var currentFileSize = CheckSingleFileSizeInMB(file);
                 bool fileAlreadyExists = File.Exists(currentFileOutputPath);
 
                 if (fileAlreadyExists == false)
                 {
-                    client.DownloadFile(file, currentFileOutputPath);
                     logger.Info(" | " + file + " | " + currentFileSize + " | " + InfoType.FileDownloaded.ToString());
+                    client.DownloadFile(file, currentFileOutputPath);
+                    
 
                 }
                 else if (fileAlreadyExists == true && OverwriteExistingFile == true)
                 {
-                    client.DownloadFile(file, currentFileOutputPath);
                     logger.Info(" | " + file + " | " + currentFileSize + " | " + InfoType.FileOverwriten.ToString());
+                    client.DownloadFile(file, currentFileOutputPath);
+                    
                 }
                 else
                 {
                     logger.Info("|" + MethodBase.GetCurrentMethod().Name + " | " + file + " | " + currentFileSize + " | " + InfoType.FileAlreadyExists.ToString());
                 }
+
+                client.Dispose();
             }
 
 
@@ -132,7 +136,7 @@ namespace download_helper
 
         private string CheckSingleFileSizeInMB(string FileUrl)
         {
-            WebClient client = new WebClient();
+            MyWebClient client = new MyWebClient();
             try
             {
                 client.OpenRead(FileUrl);
@@ -146,5 +150,15 @@ namespace download_helper
             
         }
 
+    }
+
+    public class MyWebClient : WebClient
+    {
+        protected override WebRequest GetWebRequest(Uri address)
+        {
+            var req = base.GetWebRequest(address);
+            req.Timeout = 10800000; // 3 hours
+            return req;
+        }
     }
 }

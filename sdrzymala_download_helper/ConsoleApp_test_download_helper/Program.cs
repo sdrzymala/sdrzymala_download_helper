@@ -15,10 +15,10 @@ namespace ConsoleApp_test_download_helper
             dh.ConfigFilePath = @"C:\temp\download_helper_config_file.txt";
             dh.DownloadDirectory = @"C:\temp\";
             dh.OverwriteExistingFile = true;
-            dh.DownloadFileLimit = 0;
-            dh.CheckFileLimit = 10;
-            dh.CheckSizeOfAllFiles();
-            //dh.DownloadAllFiles();
+            dh.DownloadFileLimit = 10;
+            //dh.CheckFileLimit = 999999;
+            //dh.CheckSizeOfAllFiles();
+            dh.DownloadAllFiles();
 
             Console.WriteLine("Done");
             Console.ReadLine();
