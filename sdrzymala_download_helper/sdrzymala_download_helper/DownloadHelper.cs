@@ -35,29 +35,31 @@ namespace download_helper
             {
                 string currentFileName = Path.GetFileName(file);
                 string currentFileOutputPath = Path.Combine(DownloadDirectory, currentFileName);
-                MyWebClient client = new MyWebClient();
-                var currentFileSize = CheckSingleFileSizeInMB(file);
+
+                var currentFileSize = 0; // CheckSingleFileSizeInMB(file);
                 bool fileAlreadyExists = File.Exists(currentFileOutputPath);
 
                 if (fileAlreadyExists == false)
                 {
-                    logger.Info(" | " + file + " | " + currentFileSize + " | " + InfoType.FileDownloaded.ToString());
-                    client.DownloadFile(file, currentFileOutputPath);
-                    
+                    using (MyWebClient client = new MyWebClient())
+                    {
+                        logger.Info(" | " + file + " | " + currentFileSize + " | " + InfoType.FileDownloaded.ToString());
+                        client.DownloadFile(new Uri(file), currentFileOutputPath);
+                    }
 
                 }
                 else if (fileAlreadyExists == true && OverwriteExistingFile == true)
                 {
-                    logger.Info(" | " + file + " | " + currentFileSize + " | " + InfoType.FileOverwriten.ToString());
-                    client.DownloadFile(file, currentFileOutputPath);
-                    
+                    using (MyWebClient client = new MyWebClient())
+                    {
+                        logger.Info(" | " + file + " | " + currentFileSize + " | " + InfoType.FileOverwriten.ToString());
+                        client.DownloadFile(new Uri(file), currentFileOutputPath);
+                    }
                 }
                 else
                 {
                     logger.Info("|" + MethodBase.GetCurrentMethod().Name + " | " + file + " | " + currentFileSize + " | " + InfoType.FileAlreadyExists.ToString());
                 }
-
-                client.Dispose();
             }
 
 
@@ -136,18 +138,25 @@ namespace download_helper
 
         private string CheckSingleFileSizeInMB(string FileUrl)
         {
-            MyWebClient client = new MyWebClient();
-            try
+            string output;
+
+            using (MyWebClient client = new MyWebClient())
             {
-                client.OpenRead(FileUrl);
-                Int64 bytes_total = Convert.ToInt64(client.ResponseHeaders["Content-Length"]);
-                return Convert.ToString(Math.Round(((bytes_total / 1024f) / 1024f), 2)) + " MB";
-            } catch(Exception exc)
-            {
-                logger.Error("Problem with checking the file size for " + FileUrl + " | Exception: " + exc.Message);
-                return null; 
+                try
+                {
+                    client.OpenRead(FileUrl);
+                    Int64 bytes_total = Convert.ToInt64(client.ResponseHeaders["Content-Length"]);
+                    output = Convert.ToString(Math.Round(((bytes_total / 1024f) / 1024f), 2)) + " MB";
+                }
+                catch (Exception exc)
+                {
+                    logger.Error("Problem with checking the file size for " + FileUrl + " | Exception: " + exc.Message);
+                    output = "Error";
+                }
             }
-            
+
+            return output;
+
         }
 
     }
